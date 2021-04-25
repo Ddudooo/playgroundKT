@@ -138,3 +138,33 @@ fun <T> asList(vararg ts: T): List<T> {
 val list = asList(1,2,3);
 ```
 
+#### 변수
+[소스](src/main/kotlin/study/playground/intro/variables/Variables.kt)
+
+코틀린은 강력한 타입 추론으로 타입을 명시하지 않아도,  
+변수가 선언될 때 할당된 값의 형태로 어떤 자료형을 가지는지 추론해준다.
+
+변수 유형을 명시적으로 선언할 수 있지만  
+일반적으로 컴파일러가 변수를 추론하여 작업을 수행하도록 합니다.  
+`Kotlin`은 불변성을 강제하진 않지만 권장됩니다.  
+본질적으로 `var`보다는 `val`을 사용해야 한다. 
+
+```kotlin
+val a: Int = 1  // 즉시 할당
+val b = 2   // `Int` 타입으로 유추
+val c: Int  // 초기화하지 않는 경우 타입이 필요
+c = 3       // 지연 초기화
+```
+
+#### Null Safety
+
+코틀린에서의 `Null Safety` 
+
+코틀린에서 변수 유형은 기본적으로 `null`할당을 허용하지 않음.  
+`null` 변수가 필요한 경우 변수 타입 선언시 `?`을 추가하여 `nullable`로 선언함.
+
+```kotlin
+fun parseInt(str: String): Int? {
+    // ...
+}
+```
