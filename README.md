@@ -168,3 +168,58 @@ fun parseInt(str: String): Int? {
     // ...
 }
 ```
+
+#### 클래스
+
+코틀린에서의 클래스 선언 키워드는 `class` 로 다음과 같음.
+```kotlin
+class SomeThing { /*...*/ }
+```
+
+클래스 선언은 클래스 이름, 클래스 헤더 (매겨 변수 지정, 기본 생성자 지정 등)  
+중괄호로 둘러싸인 클래스 본문으로 구성됨.  
+헤더와 바디 모두 선택사항으로 내용이 없을 경우 중괄호를 생략할 수 있음.
+```kotlin
+class EmptyClass
+```
+
+##### 생성자
+
+코틀린의 클래스에는 ___기본 생성자___ 와 하나 이상의 보조 생성자가 있을 수 있음.  
+기본 생성자의 경우 클래스의 헤더의 일부.
+```kotlin
+class Person constructor(firstName: String) { /*...*/ }
+```
+
+기본 생성자가 어노테이션이나 코드상으로 나타내는 변경자가 없을 경우  
+`constructor` 키워드를 생략할 수 있음.
+
+기본 생성자는 코드를 포함할 수 없음.  
+초기화 코드는 키워드에 미리 고정된 초기화 블록에 배치할 수 있음 `init`
+
+인스턴스 초기화 중에 ___초기화 블록___ 은  
+클래스 본문이 나타나는 것과 동일한 순서로 실행되며 속성 이니셜라이져와 인터리브됨.
+
+기본 생성자의 매개 변수는 초기화기 블록에 사용될 수 있음.  
+또 클래스 본문에 선언된 속성 이니셜라이저에도 사용할 수 있음.
+
+```kotlin
+class Customer(name: String) {
+    val customerKey = name.toUpperCase()
+}
+```
+
+코틀린에서의 속성을 선언하고 기본 생성자에서 초기화하기 위한 간단한 구문
+
+```kotlin
+class Person(val firstName: String, val lastName: String, var age: Int) { /*...*/ }
+//
+class Person2(
+    val firstName: String,
+    val lastName: String,
+    var age: Int, 
+) { /*...*/ }
+```
+
+일반적인 변수의 속성과 동일하게, 기본 생성자에서 선언된 속성은  
+읽기 전용 `val` 혹은 변경 가능 `var`일 수 있음.
