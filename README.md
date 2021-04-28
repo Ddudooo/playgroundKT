@@ -223,3 +223,23 @@ class Person2(
 
 일반적인 변수의 속성과 동일하게, 기본 생성자에서 선언된 속성은  
 읽기 전용 `val` 혹은 변경 가능 `var`일 수 있음.
+
+#### 제네릭
+
+코틀린에서의 제네릭
+
+```kotlin
+class Box<T>(t: T) {
+    var value = t
+}
+```
+
+제네릭 생성시 타입을 선언해야 함.
+```kotlin
+val box: Box<Int> = Box<Int>(1)
+```
+
+다만 생성자 파라미터 값이나 어떤 방식으로든 타입 추론이 가능할시 생략가능.
+```kotlin
+val box = Box(1)
+```
