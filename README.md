@@ -243,3 +243,42 @@ val box: Box<Int> = Box<Int>(1)
 ```kotlin
 val box = Box(1)
 ```
+
+#### 상속
+
+코틀린에서의 모든 클래스는 `Any` 라는 슈퍼타입이 없는 클래스의 기본 슈퍼 클래그가 있음.
+
+```kotlin
+class Example //`Any` 를 상속받음
+```
+
+`Any`에는  
+`equals ()`, `hashCode ()` 및 `toString ()`의 세 가지 메소드가 있음.  
+코틀린내에 모든 클래스에 대해 정의됨.
+
+기본적으로 코틀린내에서 클래스는 최종 클래스이며 상속 될 수 없음.  
+클래스를 상속 가능하게 만들려면 `open` 키워드를 사용해야함
+```kotlin
+open class Base //상속가능한 클래스 
+```
+```kotlin
+open class Base(p: Int)
+
+class Derived(p: Int) : Base(p)
+```
+
+파생 클래스에 __기본 생성자가 있는 경우__  
+기본 생성자의 매개 변수를 사용하여 기본 클래스를 바로 초기화 할 수 있음
+
+파생 클래스에 __기본 생성자가 없는 경우__  
+각 보조 생성자는 `super` 키워드를 사용하여 기본 형식을 초기화하거나  
+이를 수행하는 다른 생성자에 위임해야 함.  
+이 경우 다른 보조 생성자는 기본 유형의 다른 생성자를 호출 할 수 있음
+
+```kotlin
+class MyView : View {
+    constructor(ctx: Context) : super(ctx)
+
+    constructor(ctx: Context, attrs: AttributeSet) : super(ctx, attrs)
+}
+```
