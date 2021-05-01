@@ -282,3 +282,232 @@ class MyView : View {
     constructor(ctx: Context, attrs: AttributeSet) : super(ctx, attrs)
 }
 ```
+### 흐름 제어
+
+#### 조건 표현식
+
+if 구문.
+```kotlin
+fun maxOf(a: Int, b: Int): Int {
+    if (a > b) {
+        return a
+    } else {
+        return b
+    }
+}
+```
+
+#### Loop
+
+For 구문
+```kotlin
+val items = listOf("사과", "바나나", "키위")
+for (item in items) {
+    println(item)
+}
+```
+
+While 구문
+```kotlin
+val items = listOf("사과", "바나나", "키위")
+var index = 0
+while (index < items.size) {
+    println("item at $index is ${items[index]}")
+    index++
+}
+```
+#### When
+
+When 구문
+```kotlin
+fun describe(obj: Any): String =
+    when (obj) {
+        1 -> println("하나") //1 과 동일한지
+        "안녕?" -> println("안녕!") // 문자열과 동일한지
+        is Long -> println("$obj 는 Long 타입.") //타입이 같은지
+        !is String -> println("$obj 는 String 이 아님.") //타입이 다른지
+        else -> println("아몰랑") //디폴트
+    }
+```
+
+#### Ranges
+
+범위 지정 반복문
+
+```kotlin
+val x = 10
+val y = 9
+if (x in 1..y+1) {
+    println("범위 지정 반복문")
+}
+
+val list = listOf("가","나","다")
+
+if (-1 !in 0..list.lastIndex) {
+    println("-1 은 범위 밖")
+}
+if (list.size !in list.indices) {
+    println("범위 지정 반복문도")
+}
+
+for (x in 1..10 step 2) {
+    print(x)
+}
+println()
+for (x in 9 downTo 0 step 3) {
+    print(x)
+}
+```
+
+### 클래스 
+
+#### Data 클래스
+
+데이터를 보관하는 것이 주 목적인 클래스를 만드는 경우  
+이러한 클래스에서 __일부 표준 기능__ 과 __유틸리티 함수__ 는 종종 데이터에서 기계적으로 파생  
+코틀린에서는이를 `데이터 클래스`라고하며 `data`로 표시
+
+컴파일러에서는 기본 생성자에서 선언된 모든 속성에서 다음 함수를 선언
+
+* `equals()`/ `hashCode()` 
+
+* `toString()` "User(name=John, age=42)" 와 같은...
+
+* `componentN()` 선언 순서로 속성에 대응하는 함수
+
+* `copy()` 깊은 복사가 아닌 얕은 복사
+
+생성된 코드의 일관성과 의미 있는 동작을 보장하기 위해 데이터 클래스의 요구 사항
+* 기본 생성자는 하나 이상의 매개 변수
+* 모든 기본 생성기 매개 변수는 또는 `val` `var` 로 표시
+* 데이터 클래스는 `abstract`, `open`, `sealed` 또는 `inner`일 수 없음
+
+#### Enum 클래스
+
+열거 클래스의 기본적인 사용법
+
+```kotlin
+enum class Direction {
+    NORTH, SOUTH, WEST, EAST
+}
+```
+
+각 열거 상수는 객체로, 쉼표로 구분됨
+
+##### 익명 클래스
+
+열거형 상수는 기본 메서드를 재정의 할뿐만 아니라  
+해당 메서드를 사용하여 자체 익명 클래스를 선언 할 수도 있음.
+
+```kotlin
+enum class ProtocolState {
+    WAITING {
+        override fun signal() = TALKING
+    },
+
+    TALKING {
+        override fun signal() = WAITING
+    };
+
+    abstract fun signal(): ProtocolState
+}
+```
+
+열거형 클래스가 멤버를 정의하는 경우  
+세미콜론으로 멤버 정의에서 열거 형 상수 정의를 분리합니다.
+
+##### Enum 클래스에서의 인터페이스 상속
+
+열거형 클래스는 인터페이스를 구현할 수 있지만 (클래스에서 파생되지는 않음)  
+모든 항목에 대해 단일 인터페이스 멤버 구현을 제공하거나  
+익명 클래스 내의 각 항목에 대해 별도의 구현을 제공.  
+다음과 같이 열거형 클래스 선언에 인터페이스를 추가
+```kotlin
+enum class IntArithmetics : BinaryOperator<Int>, IntBinaryOperator {
+    PLUS {
+        override fun apply(t: Int, u: Int): Int = t + u
+    },
+    TIMES {
+        override fun apply(t: Int, u: Int): Int = t * u
+    };
+
+    override fun applyAsInt(t: Int, u: Int) = apply(t, u)
+}
+```
+
+##### 열거형 상수로 사용할때
+
+코틀린의 열거형 클래스에는 정의된 열거형 상수를 나열하고  
+이름으로 열거형 상수를 가져 오는 합성 메서드가 있습니다.  
+```kotlin
+EnumClass.valueOf(value: String): EnumClass
+EnumClass.values(): Array<EnumClass>
+```
+
+`valueOf ()` 메서드는 지정된 이름이 클래스에 정의된 열거형 상수와 일치하지 않는 경우 
+`IllegalArgumentException` 예외를 발생.
+
+`enumValues <T> ()` 및 `enumValueOf <T> ()` 함수를 사용하여  
+일반적인 방법으로 열거형 클래스의 상수에 액세스 가능
+
+```kotlin
+enum class RGB { RED, GREEN, BLUE }
+
+inline fun <reified T : Enum<T>> printAllValues() {
+    print(enumValues<T>().joinToString { it.name })
+}
+
+printAllValues<RGB>() // prints RED, GREEN, BLUE
+```
+
+모든 열거 형 상수에는 열거형 클래스 선언에서 이름과 위치를 가져 오는 속성이 있습니다.
+
+```kotlin
+val name: String
+val ordinal: Int
+```
+열거형 상수는 또한 `Comparable` 인터페이스를 구현하며,  
+자연적인 순서는 열거 형 클래스에 정의 된 순서
+
+#### Sealed 클래스
+
+~~이걸 봉인된 클래스라고 해야되나~~
+
+봉인된 클래스는 상속에 대한 더 많은 제어를 제공하는 제한된 클래스 계층을 나타냄  
+봉인된 클래스의 모든 하위 클래스는 컴파일 타임에 알려짐  
+봉인된 클래스가 있는 모듈이 컴파일 된 후에는 다른 하위 클래스가 나타날 수 없음  
+예를 들어 타사 클라이언트는 코드에서 봉인된 클래스를 확장 할 수 없음  
+따라서 봉인된 클래스의 각 인스턴스에는 이 클래스가 컴파일 될 때 알려진 제한된 집합의 형식이 있음.
+
+어떤 의미에서 봉인된 클래스는 열거형 클래스와 비슷  
+열거형 유형에 대한 값 집합도 제한되지만 각 열거형 상수는 단일 인스턴스로만 존재하는 반면  
+봉인된 클래스의 하위 클래스는 각각 자신의 상태로 인스턴스로 가질 수 있음
+
+```kotlin
+sealed class Expr
+data class Const(val number: Double) : Expr()
+data class Sum(val e1: Expr, val e2: Expr) : Expr()
+object NotANumber : Expr()
+```
+#### Object 키워드
+
+경우에 따라 새 하위 클래스를 명시적으로 선언하지 않고  
+일부 클래스를 약간 수정하는 개체를 만들어야 하는 경우가 있습니다.  
+코틀린은 이 사례를 `object expressions` 및 `object declarations`으로 처리합니다.
+
+##### Object expressions
+
+개체 식은 익명 클래스의 개체,  
+즉 클래스 선언으로 명시적으로 선언되지 않은 클래스를 만듭니다.  
+이러한 클래스는 한 번만 사용하면 편리합니다.  
+처음부터 정의하거나 기존 클래스에서 상속하거나 인터페이스를 구현할 수 있습니다.  
+익명 클래스의 인스턴스는 이름이 아닌 식으로 정의되기 때문에 익명 개체라고도합니다.
+
+```kotlin
+val helloWorld = object {
+    val hello = "Hello"
+    val world = "World"
+    // 객체 표현식은 `Any` 확장하며, `toString()` 메소드를 `override`
+    override fun toString() = "$hello $world" 
+}
+```
