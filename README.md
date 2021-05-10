@@ -622,3 +622,21 @@ __따라서 괄호 뒤에 람다를 둘 수 있음__
 확장 함수가 호출되는 대상이 되는 값(객체)을 수신 객체(receiver object) 라고 부른다
 
 ![img.png](github/static/images/functional/ExtensionFunctions.png)
+
+### 컬렉션
+
+코틀린에서의 컬렉션 기능은 자바와 동일하나
+
+불변(__immutable__) 과 가변(__mutable__) 두 유형이 있다.
+
+#### List
+
+`List`는 정렬 된 항목 모음으로  
+`Kotlin`에서 목록은 변경 가능 (__MutableList__)  
+또는  
+읽기 전용 (__List__) 일 수 있습니다.  
+목록 생성의 경우 __읽기 전용 목록__ 에는 표준 라이브러리 함수 `listOf ()`를 사용하고  
+__변경 가능한 목록__ 에는 `mutableListOf ()`를 사용합니다.
+
+__원치 않는 수정을 방지하려면 변경 가능한 목록을 `List`로 캐스팅하여  
+읽기 전용보기를 가져옵니다.__
